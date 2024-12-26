@@ -1,0 +1,4 @@
+product,quantity,price,category,vat
+ProductA,10,15.5,Category1,0.2
+ProductB,20,25.0,Category2,0.2
+ProductC,30,35.0,Category1,0.2
