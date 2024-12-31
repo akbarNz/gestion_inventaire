@@ -1,0 +1,4 @@
+product_id,name,quantity,price,category_name,vat
+P001,Laptop,10,1500.0,Electronics,0.2
+P002,Smartphone,20,800.0,Electronics,0.2
+P003,Tablet,15,600.0,Electronics,0.2

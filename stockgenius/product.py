@@ -21,57 +21,50 @@ class Product:
             price (float): The price of the product.
             category (Category): The category to which the product belongs.
         """
-        self.product_id = product_id
-        self.name = name
-        self.quantity = quantity
-        self.price = price
-        self.category = category
+        self.__product_id = product_id
+        self.__name = name
+        self.__quantity = quantity
+        self.__price = price
+        self.__category = category
 
-    def get_price(self):
-        """
-        Returns the price of the product.
+    # GETTER AND SETTER
+    @property
+    def product_id(self):
+        return self.__product_id
+    
+    @property
+    def price(self):
+        return self.__price
 
-        Returns:
-            float: The price of the product.
-        """
-        return self.price
+    @price.setter
+    def price(self, new_price):
 
-    def set_price(self, new_price):
-        """
-        Updates the price of the product.
+        if new_price > 0:
+            self.__price = new_price
 
-        Args:
-            new_price (float): The new price of the product.
-        """
-        self.price = new_price
+    @property
+    def name(self):
+        return self.__name
 
-    def get_name(self):
-        """
-        Returns the name of the product.
-
-        Returns:
-            str: The name of the product.
-        """
-        return self.name
-
-    def set_name(self, new_name):
-        """
-        Updates the name of the product.
-
-        Args:
-            new_name (str): The new name of the product.
-        """
+    @name.setter
+    def name(self, new_name):
         self.name = new_name
 
-    def set_quantity(self, new_quantity):
-        """
-        Updates the quantity of the product.
+    @property
+    def quantity(self):
+        return self.__quantity
+    
+    @quantity.setter
+    def quantity(self, new_quantity):
+        if isinstance(new_quantity, int):
+            self.quantity = new_quantity
+        else:
+            raise TypeError(f"type of new_quantity must be int. {type(new_quantity)} not supported")
 
-        Args:
-            new_quantity (int): The new quantity of the product.
-        """
-        self.quantity = new_quantity
-
+    @property
+    def category(self):
+        return self.__category
+    
     def __str__(self):
         """
         Returns a string representation of the product.

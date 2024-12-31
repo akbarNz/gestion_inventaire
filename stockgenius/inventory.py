@@ -12,9 +12,25 @@ class Inventory:
         """
         Initializes a new Inventory instance.
         """
-        self.products = []
-        self.categories = []
-        self.orders = []
+        self.__products = []
+        self.__categories = []
+        self.__orders = []
+
+    # GETTERS AND SETTERS
+
+    @property
+    def products(self):
+        return self.__products
+
+    @property
+    def categories(self):
+        return self.__categories
+    
+    @property
+    def orders(self):
+        return self.__orders
+    
+    # METHODS
 
     def add_product(self, product):
         """
@@ -24,7 +40,16 @@ class Inventory:
             product (Product): The product to add.
         """
         self.products.append(product)
+    
+    def add_category(self, category):
+        """
+        Adds a category to the inventory.
 
+        Args:
+            category (Category): The category to add.
+        """
+        self.categories.append(category)
+    
     def remove_product(self, product_id):
         """
         Removes a product from the inventory by its ID.
@@ -32,7 +57,11 @@ class Inventory:
         Args:
             product_id (str): The ID of the product to remove.
         """
-        self.products = [p for p in self.products if p.product_id != product_id]
+
+        tmp = self.get_product_by_id(product_id)
+
+        if tmp is not None:
+            self.products.remove(tmp)
 
     def get_product_by_id(self, product_id):
         """
@@ -86,6 +115,26 @@ class Inventory:
         """
         return [p for p in self.products if min_price <= p.price <= max_price]
 
+    def search_category_by_name(self, name):
+        """Search a category by its name.
+        
+        Args:
+            name (str): the name of the category
+
+        Returns:
+            a category (Category) if found, None otherwise.    
+        """
+        i = 0
+        found = False
+        tmp = None
+        while not found and i < len(self.categories):
+            if name == self.categories[i]:
+                found = True
+                tmp = self.categories[i]
+                
+            i += 1
+        return tmp
+
     def update_product_price(self, product_id, new_price):
         """
         Updates the price of a product.
@@ -96,7 +145,7 @@ class Inventory:
         """
         product = self.get_product_by_id(product_id)
         if product:
-            product.set_price(new_price)
+            product.price = new_price
 
     def update_category_vat(self, category_name, new_vat):
         """
@@ -108,7 +157,7 @@ class Inventory:
         """
         for category in self.categories:
             if category.name == category_name:
-                category.set_vat(new_vat)
+                category.vat = new_vat
 
     def calculate_product_price_with_vat(self, product_id):
         """
@@ -149,24 +198,6 @@ class Inventory:
             report += str(product) + "\n"
         return report
 
-    def get_products(self):
-        """
-        Retrieves all products in the inventory.
-
-        Returns:
-            list: A list of all products in the inventory.
-        """
-        return self.products
-
-    def get_categories(self):
-        """
-        Retrieves all categories in the inventory.
-
-        Returns:
-            list: A list of all categories in the inventory.
-        """
-        return self.categories
-
     def add_new_order(self, order):
         """
         Adds a new order to the inventory.
@@ -198,4 +229,29 @@ class Inventory:
         Args:
             order_id (str): The ID of the order to remove.
         """
-        self.orders = [o for o in self.orders if o.order_id != order_id]
+        tmp = self.get_order_by_id(order_id)
+
+        if tmp:
+            self.orders.remove(tmp)
+    
+    def get_order_by_id(self, order_id):
+        """Search an order by its order_id.
+
+        Args:
+            order_id (str): The ID of the order to search
+        
+        Returns:
+            order (Order) if found, None otherwise.
+        """
+
+        i = 0
+        found = False
+        tmp = None
+
+        while not found and i < len(self.orders):
+            if self.orders[i].order_id == order_id:
+                tmp = self.orders[i]
+                found = True
+            i += 1
+        
+        return tmp

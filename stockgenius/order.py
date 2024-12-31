@@ -16,10 +16,24 @@ class Order:
             order_id (str): The unique identifier for the order.
             products (list): A list of Product objects in the order.
         """
-        self.order_id = order_id
-        self.products = products
-        self.total_price = self.calculate_total_price()
+        self.__order_id = order_id
+        self.__products = products
+        self.__total_price = self.calculate_total_price()
 
+    # GETTERS AND SETTERS
+    @property
+    def products(self):
+        return self.__products
+
+    @property
+    def total_price(self):
+        return self.__total_price
+
+    @property
+    def order_id(self):
+        return self.__order_id
+    
+    # METHODS
     def calculate_total_price(self):
         """
         Calculates the total price of the order.
@@ -46,32 +60,27 @@ class Order:
         Args:
             product_id (str): The ID of the product to remove.
         """
-        self.products = [p for p in self.products if p.product_id != product_id]
-        self.total_price = self.calculate_total_price()
+        tmp = self._seach_product_by_id(product_id)
 
-    def get_products(self):
-        """
-        Retrieves all products in the order.
+        if tmp:
+            self.products.remove(tmp)
 
+    def _seach_product_by_id(self, product_id):
+        """Search a product by its product_id.
+        
+        Args:
+            product_id (str): The ID of the product to search.
+        
         Returns:
-            list: A list of all products in the order.
+            the product (Product) if found None otherwise.
         """
-        return self.products
+        i = 0
+        found = False
+        tmp = None
+        while not found and i < len(self.products):
+            if self.products[i].product_id == product_id:
+                tmp = self.products[i]
+                found = True
+            i += 1
 
-    def get_total_price(self):
-        """
-        Retrieves the total price of the order.
-
-        Returns:
-            float: The total price of the order.
-        """
-        return self.total_price
-
-    def get_order_id(self):
-        """
-        Retrieves the ID of the order.
-
-        Returns:
-            str: The ID of the order.
-        """
-        return self.order_id
+        return tmp

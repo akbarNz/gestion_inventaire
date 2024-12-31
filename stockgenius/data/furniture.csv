@@ -1,0 +1,4 @@
+product_id,name,quantity,price,category_name,vat
+P004,Chair,30,50.0,Furniture,0.1
+P005,Table,10,150.0,Furniture,0.1
+P006,Sofa,5,500.0,Furniture,0.1

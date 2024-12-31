@@ -1,0 +1,4 @@
+product_id,name,quantity,price,category_name,vat
+P007,T-Shirt,50,20.0,Clothing,0.15
+P008,Jeans,40,40.0,Clothing,0.15
+P009,Jacket,25,100.0,Clothing,0.15
