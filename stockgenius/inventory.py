@@ -30,6 +30,9 @@ class Inventory:
     def orders(self):
         return self.__orders
     
+    # BUILTINS REDEFINED
+    def __str__(self):
+        return f"{'-'*80}\nInventory Report\nTotal products: {len(self.products)}\nOrders: {len(self.orders)}\nCategories: {[c.name for c in self.categories]}\n{'-'*80}"
     # METHODS
 
     def add_product(self, product):
@@ -128,7 +131,7 @@ class Inventory:
         found = False
         tmp = None
         while not found and i < len(self.categories):
-            if name == self.categories[i]:
+            if name == self.categories[i].name:
                 found = True
                 tmp = self.categories[i]
                 
@@ -193,10 +196,7 @@ class Inventory:
         Returns:
             str: A report of the inventory.
         """
-        report = "Inventory Report:\n"
-        for product in self.products:
-            report += str(product) + "\n"
-        return report
+        pass
 
     def add_new_order(self, order):
         """
