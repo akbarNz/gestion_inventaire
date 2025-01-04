@@ -33,6 +33,16 @@ class Inventory:
     # BUILTINS REDEFINED
     def __str__(self):
         return f"{'-'*80}\nInventory Report\nTotal products: {len(self.products)}\nOrders: {len(self.orders)}\nCategories: {[c.name for c in self.categories]}\n{'-'*80}"
+    # PRINTING
+    def list_products(self):
+        """
+        Lists all products in the inventory and their prices. 
+        """
+        ret = "Products in the inventory:\nProduct ID | Name | Price\n"
+        ret = "-"*80 + ret +"-"*80 + "\n"
+        for product in self.products:
+            ret += f"{product.product_id} | {product.name} | {product.price}\n {"-"*80}"
+        return ret
     # METHODS
 
     def add_product(self, product):
@@ -52,6 +62,19 @@ class Inventory:
             category (Category): The category to add.
         """
         self.categories.append(category)
+    
+    def remove_category(self, category_name):
+        """
+        Removes a category from the inventory by its name.
+
+        Args:
+            category_name (str): The name of the category to remove.
+        """
+        tmp = self.search_category_by_name(category_name)
+
+        if tmp:
+            self.categories.remove(tmp)
+        
     
     def remove_product(self, product_id):
         """
@@ -138,6 +161,18 @@ class Inventory:
             i += 1
         return tmp
 
+    def search_products_by_category_name(self, category_name):
+        """
+        Searches for products by their category name.
+
+        Args:
+            category_name (str): The name of the category to search for.
+
+        Returns:
+            list: A list of products that match the search criteria.
+        """
+        return [p for p in self.products if p.category.name == category_name]
+    
     def update_product_price(self, product_id, new_price):
         """
         Updates the price of a product.

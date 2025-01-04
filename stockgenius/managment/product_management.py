@@ -1,0 +1,228 @@
+from stockgenius.inventory import Inventory
+from stockgenius.product import Product
+from stockgenius.category import Category
+
+def product_management(inventory:Inventory):
+    """Manage products in the inventory.
+    
+    Args:
+        inventory (Inventory): the inventory
+    """
+    done = False
+    while not done:
+        message = f"{'-'*106}\nTo add a product enter [a]\n to remove a product enter [r]\n to search products enter [s]\n to quit product management enter [q]\n{'-'*106}"
+        print(message)
+        opt = choose_option()
+
+        if opt == 'a':
+            print("Add a product")
+            add_product(inventory)
+        elif opt == 'r':
+            print('Remove a product')
+            remove_product(inventory)
+        elif opt == 's':
+            print('Search products')
+            search_products(inventory)
+        elif opt == 'q':
+            done = True
+            print('you quit successefuly')
+
+def choose_option():
+    """Choose an option to manage.
+    
+    Returns: opt (str) the choosen option
+    """
+    opt = input("enter an option [a/r/s/q]: ")
+    valid = False
+
+    while not valid:
+        if len(opt) == 1 and opt.lower() in 'arsq':
+            valid = True
+        else:
+            print("option not valid")
+            opt = input("enter an option [a/r/s/q]: ")
+    
+    return opt
+
+def add_product(inventory:Inventory):
+    """Input product data.
+    
+    Args:
+        inventory (Inventory): the inventory
+    """
+    product_id = input("Enter the product ID eg P003 : ")
+    is_correct = False
+    while not is_correct:
+        if inventory.get_product_by_id(product_id) is not None:
+            print("Product ID already exists")
+            change_existing_product = input("Do you want to change the existing product? [y/n]: ")
+            if change_existing_product == 'y':
+                is_correct = True
+            else:
+                product_id = input("Enter the product ID eg P003 : ")
+        else: 
+            is_correct = True
+
+    if change_existing_product == 'y':
+        # change the existing product
+        change_product(inventory, product_id)
+    else:
+        # add a new product
+        name = input("Enter the product name: ")
+
+        quantity = input("Enter the product quantity: ")
+        is_gt_zero = False
+        while not is_gt_zero:
+            if int(quantity) < 0:
+                print("Quantity must be greater or equal zero")
+                quantity = input("Enter the product quantity: ")
+            else:
+                is_gt_zero = True
+        
+        price = input("Enter the product price: ")
+        is_gt_zero = False
+        while not is_gt_zero:
+            if float(price) <= 0:
+                print("Price must be greater or than zero")
+                price = input("Enter the product price: ")
+            else:
+                is_gt_zero = True
+        
+        category_name = input("Enter the category name: ")
+        if inventory.search_category_by_name(category_name) is None:
+            print("Category does not exist")
+            vat = input("Enter the category VAT: ")
+            is_gt_zero = False
+            while not is_gt_zero:
+                if float(vat) < 0:
+                    print("VAT must be greater than zero")
+                    vat = input("Enter the category VAT: ")
+                else:
+                    is_gt_zero = True
+        
+        if is_gt_zero:
+            # add the category to the inventory
+            category = Category(category_name, vat)
+            inventory.add_category(category)
+
+        # add the product to the inventory
+        product = Product(product_id, name, quantity, price, category_name)
+        inventory.add_product(product)
+
+def change_product(inventory:Inventory, product_id:str):
+    """Change an existing product.
+    
+    Args:
+        inventory (Inventory): the inventory
+        product_id (str): the product ID
+    """
+    product = inventory.get_product_by_id(product_id)
+    print(f"Product ID: {product.product_id}, Name: {product.name}, Quantity: {product.quantity}, Price: {product.price}, Category: {product.category.name}")
+    name = input("Enter the new product name or Enter to keep the current name: ")
+    if name != '':
+        product.name = name
+
+    quantity = input("Enter the new product quantity or Enter to keep the current quantity: ")
+    if quantity != '':
+        is_gt_zero = False
+        while not is_gt_zero:
+            if int(quantity) < 0:
+                print("Quantity must be greater or equal zero")
+                quantity = input("Enter the new product quantity: ")
+            else:
+                is_gt_zero = True
+        product.quantity = quantity
+
+    price = input("Enter the new product price or Enter to keep the current price: ")
+    if price != '':
+        is_gt_zero = False
+        while not is_gt_zero:
+            if float(price) <= 0:
+                print("Price must be greater or than zero")
+                price = input("Enter the new product price: ")
+            else:
+                is_gt_zero = True
+        product.price = price
+
+    category_name = input("Enter the new category name or Enter to keep the current category: ")
+    if category_name != '':
+        if inventory.search_category_by_name(category_name) is None:
+            print("Category does not exist")
+            vat = input("Enter the category VAT: ")
+            is_gt_zero = False
+            while not is_gt_zero:
+                if float(vat) < 0:
+                    print("VAT must be greater than zero")
+                    vat = input("Enter the category VAT: ")
+                else:
+                    is_gt_zero = True
+            if is_gt_zero:
+                # add the category to the inventory
+                category = Category(category_name, vat)
+                inventory.add_category(category)
+        product.category_name = category_name
+
+def remove_product(inventory:Inventory):
+    """Remove a product from the inventory.
+    
+    Args:
+        inventory (Inventory): the inventory
+    """
+    product_id = input("Enter the product ID to remove: ")
+    product = inventory.get_product_by_id(product_id)
+    if product is not None:
+        inventory.remove_product(product)
+    else:
+        print("Product not found")
+
+def search_products(inventory:Inventory):
+    """Search products in the inventory.
+    
+    Args:
+        inventory (Inventory): the inventory
+    """
+    print("Search products")
+    opt = input("Search product by name [n]\nSearch product by product ID [i]\nSearch products by price range [p]\nSearch products by category name [c]\n")
+    is_correct = False
+    while not is_correct:
+        if len(opt) == 1 and opt.lower() in 'nipc':
+            is_correct = True
+        else:
+            print("option not valid")
+            opt = input("Search product by name [n]\nSearch product by product ID [i]\nSearch products by price range [p]\nSearch products by category name [c]\n")
+    if opt == 'n':
+        print("Search product by name")
+        name = input("Enter the product name: ")
+        products = inventory.search_products_by_name(name)
+        if len(products) == 0:
+            print("No products found")
+        else:
+            for product in products:
+                print(product)
+    elif opt == 'i':
+        print("Search product by product ID")
+        product_id = input("Enter the product ID: ")
+        product = inventory.get_product_by_id(product_id)
+        if product is None:
+            print("Product not found")
+        else:
+            print(product)
+    elif opt == 'p':
+        print("Search products by price range")
+        min_price = float(input("Enter the minimum price: "))
+        max_price = float(input("Enter the maximum price: "))
+        products = inventory.search_products_by_price_range(min_price, max_price)
+        if len(products) == 0:
+            print("No products found")
+        else:
+            for product in products:
+                print(product)
+    elif opt == 'c':
+        print("Search products by category name")
+        category_name = input("Enter the category name: ")
+        products = inventory.search_products_by_category_name(category_name)
+        if len(products) == 0:
+            print("No products found")
+        else:
+            for product in products:
+                print(product)

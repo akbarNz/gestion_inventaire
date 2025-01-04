@@ -32,3 +32,6 @@ class Category:
             self.vat = new_vat
         else:
             raise TypeError(f"new_vat must be float. {type(new_vat)} not supported")
+
+    def __str__(self):
+        return f"Category: {self.name}, VAT: {self.vat}"

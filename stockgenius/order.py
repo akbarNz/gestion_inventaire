@@ -32,7 +32,19 @@ class Order:
     @property
     def order_id(self):
         return self.__order_id
-    
+    # BUILTINS REDEFINED
+    def __str__(self):
+        return f"{'-'*80}\nOrder ID: {self.order_id}\nTotal price: {self.total_price}\nProducts: {len(self.products)}\n{'-'*80}\n"
+    # PRINTING
+    def list_products(self):
+        """
+        Lists all products in the order.
+        """
+        ret = "Products in the order:\nProduct ID | Name | Price\n"
+        ret = "-"*80 + ret +"-"*80 + "\n"
+        for product in self.products:
+            ret += f"{product.product_id} | {product.name} | {product.price}\n {"-"*80}"
+        return ret
     # METHODS
     def calculate_total_price(self):
         """
@@ -53,19 +65,16 @@ class Order:
         self.products.append(product)
         self.total_price = self.calculate_total_price()
 
-    def remove_product(self, product_id):
+    def remove_product(self, product):
         """
-        Removes a product from the order by its ID.
+        Removes a product from the order.
 
         Args:
-            product_id (str): The ID of the product to remove.
+            product (Product): the product to remove.
         """
-        tmp = self._seach_product_by_id(product_id)
+        self.products.remove(product)
 
-        if tmp:
-            self.products.remove(tmp)
-
-    def _seach_product_by_id(self, product_id):
+    def seach_product_by_id(self, product_id):
         """Search a product by its product_id.
         
         Args:

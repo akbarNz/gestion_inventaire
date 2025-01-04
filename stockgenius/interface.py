@@ -1,10 +1,8 @@
 import argparse
-from product import Product
-from category import Category
-from order import Order
-from inventory import Inventory
-from consolidate import consolidate_csv_files
 from init_state import init_state
+from stockgenius.managment.product_management import product_management
+from stockgenius.managment.order_management import order_management
+from stockgenius.managment.category_management import category_management
 
 def main():
     # Create the parser
@@ -50,8 +48,10 @@ def main():
             product_management(inventory)
         elif opt == 'o':
             print('Orders management')
+            order_management(inventory)
         elif opt == 'c':
             print('Categories management')
+            category_management(inventory)
         elif opt == 'q':
             done = True
             print('you quit successefuly')
@@ -75,16 +75,7 @@ def choose_option():
             print("option not valid")
             opt = input("enter an option [p/o/c/q]: ")
     
-    return opt
-
-def product_management(inventory):
-    """Manage products in the inventory.
-    
-    Args:
-        inventory (Inventory): the inventory
-    """
-    pass
-        
+    return opt   
 
 if __name__ == '__main__':
     main()
