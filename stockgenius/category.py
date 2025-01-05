@@ -28,10 +28,8 @@ class Category:
 
     @vat.setter
     def vat(self, new_vat):
-        if isinstance(new_vat, float):
-            self.vat = new_vat
-        else:
-            raise TypeError(f"new_vat must be float. {type(new_vat)} not supported")
+        self.__vat = new_vat
+        
 
     def __str__(self):
         return f"Category: {self.name}, VAT: {self.vat}"

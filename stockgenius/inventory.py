@@ -38,10 +38,10 @@ class Inventory:
         """
         Lists all products in the inventory and their prices. 
         """
-        ret = "Products in the inventory:\nProduct ID | Name | Price\n"
+        ret = "\nProducts in the inventory:\nProduct ID | Name | Price\n"
         ret = "-"*80 + ret +"-"*80 + "\n"
         for product in self.products:
-            ret += f"{product.product_id} | {product.name} | {product.price}\n {"-"*80}"
+            ret += f"{product.product_id} | {product.name} | {product.price}\n {'-'*80}\n"
         return ret
     # METHODS
 
@@ -76,18 +76,14 @@ class Inventory:
             self.categories.remove(tmp)
         
     
-    def remove_product(self, product_id):
+    def remove_product(self, product):
         """
-        Removes a product from the inventory by its ID.
+        Removes a product from the inventory.
 
         Args:
             product_id (str): The ID of the product to remove.
         """
-
-        tmp = self.get_product_by_id(product_id)
-
-        if tmp is not None:
-            self.products.remove(tmp)
+        self.products.remove(product)
 
     def get_product_by_id(self, product_id):
         """

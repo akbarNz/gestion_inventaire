@@ -1,6 +1,6 @@
-from stockgenius.inventory import Inventory
-from stockgenius.product import Product
-from stockgenius.category import Category
+from inventory import Inventory
+from product import Product
+from category import Category
 
 def product_management(inventory:Inventory):
     """Manage products in the inventory.
@@ -8,9 +8,10 @@ def product_management(inventory:Inventory):
     Args:
         inventory (Inventory): the inventory
     """
+    print(inventory.list_products())
     done = False
     while not done:
-        message = f"{'-'*106}\nTo add a product enter [a]\n to remove a product enter [r]\n to search products enter [s]\n to quit product management enter [q]\n{'-'*106}"
+        message = f"{'-'*106}\nTo add a product enter [a]\n to remove a product enter [r]\n to update a product enter [u]\nto search products enter [s]\n to list enter [l]\n to quit product management enter [q]\n{'-'*106}"
         print(message)
         opt = choose_option()
 
@@ -20,9 +21,18 @@ def product_management(inventory:Inventory):
         elif opt == 'r':
             print('Remove a product')
             remove_product(inventory)
+        elif opt == 'u':
+            print('Update a product')
+            product_id = input("Enter the product ID to update: ")
+            if inventory.get_product_by_id(product_id) is None:
+                print("Product not found")
+            else:
+                change_product(inventory, product_id)
         elif opt == 's':
             print('Search products')
             search_products(inventory)
+        elif opt == 'l':
+            print(inventory.list_products())
         elif opt == 'q':
             done = True
             print('you quit successefuly')
@@ -32,15 +42,15 @@ def choose_option():
     
     Returns: opt (str) the choosen option
     """
-    opt = input("enter an option [a/r/s/q]: ")
+    opt = input("enter an option [a/r/u/s/l/q]: ")
     valid = False
 
     while not valid:
-        if len(opt) == 1 and opt.lower() in 'arsq':
+        if len(opt) == 1 and opt.lower() in 'aruslq':
             valid = True
         else:
             print("option not valid")
-            opt = input("enter an option [a/r/s/q]: ")
+            opt = input("enter an option [a/r/u/s/l/q]: ")
     
     return opt
 
@@ -52,6 +62,7 @@ def add_product(inventory:Inventory):
     """
     product_id = input("Enter the product ID eg P003 : ")
     is_correct = False
+    change_existing_product = 'n'
     while not is_correct:
         if inventory.get_product_by_id(product_id) is not None:
             print("Product ID already exists")
@@ -89,6 +100,7 @@ def add_product(inventory:Inventory):
                 is_gt_zero = True
         
         category_name = input("Enter the category name: ")
+        category = None
         if inventory.search_category_by_name(category_name) is None:
             print("Category does not exist")
             vat = input("Enter the category VAT: ")
@@ -100,13 +112,16 @@ def add_product(inventory:Inventory):
                 else:
                     is_gt_zero = True
         
-        if is_gt_zero:
-            # add the category to the inventory
-            category = Category(category_name, vat)
-            inventory.add_category(category)
+            if is_gt_zero:
+                # add the category to the inventory
+                category = Category(category_name, vat)
+                inventory.add_category(category)
 
         # add the product to the inventory
-        product = Product(product_id, name, quantity, price, category_name)
+        if category is None:
+            category = inventory.search_category_by_name(category_name)
+
+        product = Product(product_id, name, int(quantity), float(price), category)
         inventory.add_product(product)
 
 def change_product(inventory:Inventory, product_id:str):
@@ -131,7 +146,7 @@ def change_product(inventory:Inventory, product_id:str):
                 quantity = input("Enter the new product quantity: ")
             else:
                 is_gt_zero = True
-        product.quantity = quantity
+        product.quantity = int(quantity)
 
     price = input("Enter the new product price or Enter to keep the current price: ")
     if price != '':
@@ -142,7 +157,7 @@ def change_product(inventory:Inventory, product_id:str):
                 price = input("Enter the new product price: ")
             else:
                 is_gt_zero = True
-        product.price = price
+        product.price = float(price)
 
     category_name = input("Enter the new category name or Enter to keep the current category: ")
     if category_name != '':
@@ -159,8 +174,8 @@ def change_product(inventory:Inventory, product_id:str):
             if is_gt_zero:
                 # add the category to the inventory
                 category = Category(category_name, vat)
-                inventory.add_category(category)
-        product.category_name = category_name
+                inventory.add_category(category)            
+        product.category = inventory.search_category_by_name(category_name)
 
 def remove_product(inventory:Inventory):
     """Remove a product from the inventory.
@@ -182,14 +197,14 @@ def search_products(inventory:Inventory):
         inventory (Inventory): the inventory
     """
     print("Search products")
-    opt = input("Search product by name [n]\nSearch product by product ID [i]\nSearch products by price range [p]\nSearch products by category name [c]\n")
+    opt = input("Search product by name [n]\nSearch product by product ID [i]\nSearch products by price range [p]\nSearch products by category name [c]\n enter [q] to quit")
     is_correct = False
     while not is_correct:
-        if len(opt) == 1 and opt.lower() in 'nipc':
+        if len(opt) == 1 and opt.lower() in 'nipcq':
             is_correct = True
         else:
             print("option not valid")
-            opt = input("Search product by name [n]\nSearch product by product ID [i]\nSearch products by price range [p]\nSearch products by category name [c]\n")
+            opt = input("Search product by name [n]\nSearch product by product ID [i]\nSearch products by price range [p]\nSearch products by category name [c]\n enter [q] to quit")
     if opt == 'n':
         print("Search product by name")
         name = input("Enter the product name: ")
@@ -226,3 +241,5 @@ def search_products(inventory:Inventory):
         else:
             for product in products:
                 print(product)
+    else:
+        pass

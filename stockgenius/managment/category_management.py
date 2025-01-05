@@ -1,5 +1,5 @@
-from stockgenius.inventory import Inventory
-from stockgenius.category import Category
+from inventory import Inventory
+from category import Category
 
 def category_management(inventory: Inventory):
     """Manage categories in the inventory. create, remove, list categories, and change VAT.
@@ -57,6 +57,7 @@ def create_category(inventory: Inventory):
     """
     name = input("Enter the category name: ")
     is_correct = False
+    change_existing_category = 'n'
     while not is_correct:
         if inventory.search_category_by_name(name) is not None:
             print("Category ID already exists")

@@ -29,6 +29,9 @@ class Order:
     def total_price(self):
         return self.__total_price
 
+    @total_price.setter
+    def total_price(self, new_total_price):
+        self.__total_price = new_total_price
     @property
     def order_id(self):
         return self.__order_id
@@ -43,7 +46,7 @@ class Order:
         ret = "Products in the order:\nProduct ID | Name | Price\n"
         ret = "-"*80 + ret +"-"*80 + "\n"
         for product in self.products:
-            ret += f"{product.product_id} | {product.name} | {product.price}\n {"-"*80}"
+            ret += f"{product.product_id} | {product.name} | {product.price}\n {'-'*80}"
         return ret
     # METHODS
     def calculate_total_price(self):

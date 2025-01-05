@@ -21,8 +21,8 @@ def init_state(data_dir):
             reader = csv.DictReader(csv_file)
             
             for row in reader:
-                cat = Category(row['category_name'], row['vat'])
-                product = Product(row['product_id'], row['name'], row['quantity'], row['price'], cat)
+                cat = Category(row['category_name'], float(row['vat']))
+                product = Product(row['product_id'], row['name'], int(row['quantity']), float(row['price']), cat)
 
                 # add a category if not exitent 
                 if inventory.search_category_by_name(cat.name) is None:

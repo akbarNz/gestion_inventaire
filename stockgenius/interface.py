@@ -1,8 +1,8 @@
 import argparse
 from init_state import init_state
-from stockgenius.managment.product_management import product_management
-from stockgenius.managment.order_management import order_management
-from stockgenius.managment.category_management import category_management
+from managment.product_management import product_management
+from managment.order_management import order_management
+from managment.category_management import category_management
 
 def main():
     # Create the parser
