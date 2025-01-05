@@ -220,15 +220,6 @@ class Inventory:
             summary += f"Order ID: {order.order_id}, Total Price: {order.total_price}\n"
         return summary
 
-    def generate_inventory_report(self):
-        """
-        Generates a report of the inventory.
-
-        Returns:
-            str: A report of the inventory.
-        """
-        pass
-
     def add_new_order(self, order):
         """
         Adds a new order to the inventory.
