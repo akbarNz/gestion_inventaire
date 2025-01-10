@@ -81,7 +81,7 @@ class Inventory:
         Removes a product from the inventory.
 
         Args:
-            product_id (str): The ID of the product to remove.
+            product (Product): The ID of the product to remove.
         """
         self.products.remove(product)
 
@@ -206,7 +206,6 @@ class Inventory:
         product = self.get_product_by_id(product_id)
         if product:
             return product.calculate_price_with_vat()
-        return None
 
     def generate_sales_summary(self):
         """
@@ -242,7 +241,6 @@ class Inventory:
         for order in self.orders:
             if order.order_id == order_id:
                 return order
-        return None
 
     def remove_order(self, order_id):
         """

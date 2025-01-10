@@ -1,5 +1,12 @@
-from inventory import Inventory
-from category import Category
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+
+from stockgenius.category import Category
+from stockgenius.inventory import Inventory
+
 
 def category_management(inventory: Inventory):
     """Manage categories in the inventory. create, remove, list categories, and change VAT.
@@ -72,7 +79,7 @@ def create_category(inventory: Inventory):
 
     if change_existing_category == 'y':
         # change the existing category
-        change_vat(inventory, name)
+        change_vat(inventory)
         
 def remove_category(inventory: Inventory):
     """Remove a category.

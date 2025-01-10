@@ -1,6 +1,12 @@
-from inventory import Inventory
-from product import Product
-from category import Category
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+from stockgenius.category import Category
+from stockgenius.inventory import Inventory
+from stockgenius.product import Product
+
 
 def product_management(inventory:Inventory):
     """Manage products in the inventory.
@@ -103,12 +109,12 @@ def add_product(inventory:Inventory):
         category = None
         if inventory.search_category_by_name(category_name) is None:
             print("Category does not exist")
-            vat = input("Enter the category VAT: ")
+            vat =float(input("Enter the category VAT: "))
             is_gt_zero = False
             while not is_gt_zero:
                 if float(vat) < 0:
                     print("VAT must be greater than zero")
-                    vat = input("Enter the category VAT: ")
+                    vat = float(input("Enter the category VAT: "))
                 else:
                     is_gt_zero = True
         
@@ -163,12 +169,12 @@ def change_product(inventory:Inventory, product_id:str):
     if category_name != '':
         if inventory.search_category_by_name(category_name) is None:
             print("Category does not exist")
-            vat = input("Enter the category VAT: ")
+            vat = float(input("Enter the category VAT: "))
             is_gt_zero = False
             while not is_gt_zero:
                 if float(vat) < 0:
                     print("VAT must be greater than zero")
-                    vat = input("Enter the category VAT: ")
+                    vat = float(input("Enter the category VAT: "))
                 else:
                     is_gt_zero = True
             if is_gt_zero:

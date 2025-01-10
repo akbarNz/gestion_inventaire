@@ -1,0 +1,4 @@
+number_of_products: 9
+number_of_orders: 0
+sales_summary: Sales Summary:
+

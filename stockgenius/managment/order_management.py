@@ -1,6 +1,13 @@
-from order import Order
-from inventory import Inventory
+import sys
+import os
 from copy import deepcopy
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
+
+from stockgenius.inventory import Inventory
+from stockgenius.order import Order
+
 
 def order_management(inventory:Inventory):
     """Manage orders in the inventory. create, remove, search, and list orders.

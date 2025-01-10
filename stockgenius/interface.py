@@ -1,9 +1,16 @@
-import argparse
+import sys
 import os
+import argparse
+
+# Ajoute le chemin du dossier racine au PYTHONPATH
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+
 from init_state import init_state
-from managment.product_management import product_management
-from managment.order_management import order_management
 from managment.category_management import category_management
+from managment.order_management import order_management
+from managment.product_management import product_management
+
 
 def main():
     # Create the parser
@@ -34,8 +41,6 @@ def main():
     w = "\nWelcome to stockGenius\n"
     s = '-'*len(w) + w + '-'*len(w)
     print(s)
-
-    print(inventory)
 
     done = False
     

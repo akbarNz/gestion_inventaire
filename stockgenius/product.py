@@ -48,7 +48,7 @@ class Product:
 
     @name.setter
     def name(self, new_name):
-        self.name = new_name
+        self.__name = new_name
 
     @property
     def quantity(self):
@@ -57,7 +57,7 @@ class Product:
     @quantity.setter
     def quantity(self, new_quantity):
         if isinstance(new_quantity, int):
-            self.quantity = new_quantity
+            self.__quantity = new_quantity
         else:
             raise TypeError(f"type of new_quantity must be int. {type(new_quantity)} not supported")
 

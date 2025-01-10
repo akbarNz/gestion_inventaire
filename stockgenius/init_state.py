@@ -1,8 +1,13 @@
 import csv
 import os
-from product import Product
+import sys
+
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from category import Category
 from inventory import Inventory
+from product import Product
+
 
 def init_state(data_dir):
     """Process the files and create the initial state of the app.
