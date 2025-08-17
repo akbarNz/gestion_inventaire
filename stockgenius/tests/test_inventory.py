@@ -8,6 +8,7 @@ from stockgenius.category import Category
 from stockgenius.inventory import Inventory
 from stockgenius.order import Order
 from stockgenius.product import Product
+from stockgenius.supplier import Supplier
 
 
 class TestInventory(unittest.TestCase):

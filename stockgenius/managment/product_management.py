@@ -6,6 +6,8 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from stockgenius.category import Category
 from stockgenius.inventory import Inventory
 from stockgenius.product import Product
+from stockgenius.supplier import Supplier
+from stockgenius.managment.supplier_management import create_supplier
 
 
 def product_management(inventory:Inventory):
@@ -123,12 +125,32 @@ def add_product(inventory:Inventory):
                 category = Category(category_name, vat)
                 inventory.add_category(category)
 
+        # Add supplier handling
+        supplier_id = input("Enter the supplier ID (eg. S001): ")
+        supplier = None
+        if inventory.get_supplier_by_id(supplier_id) is None:
+            print("Supplier does not exist")
+            create_new = input("Do you want to create a new supplier? [y/n]: ")
+            if create_new.lower() == 'y':
+                supplier = create_supplier(inventory)
+            else:
+                supplier_id = input("Enter an existing supplier ID: ")
+                supplier = inventory.get_supplier_by_id(supplier_id)
+                while supplier is None:
+                    print("Supplier not found")
+                    supplier_id = input("Enter an existing supplier ID: ")
+                    supplier = inventory.get_supplier_by_id(supplier_id)
+        else:
+            supplier = inventory.get_supplier_by_id(supplier_id)
+
         # add the product to the inventory
         if category is None:
             category = inventory.search_category_by_name(category_name)
 
-        product = Product(product_id, name, int(quantity), float(price), category)
+        product = Product(product_id, name, int(quantity), float(price), category, supplier)
         inventory.add_product(product)
+        if supplier:
+            supplier.add_product(product)
 
 def change_product(inventory:Inventory, product_id:str):
     """Change an existing product.
@@ -138,21 +160,18 @@ def change_product(inventory:Inventory, product_id:str):
         product_id (str): the product ID
     """
     product = inventory.get_product_by_id(product_id)
-    print(f"Product ID: {product.product_id}, Name: {product.name}, Quantity: {product.quantity}, Price: {product.price}, Category: {product.category.name}")
-    name = input("Enter the new product name or Enter to keep the current name: ")
+    print(f"Product ID: {product_id}, Name: {product.name}, Quantity: {product.quantity}, Price: {product.price}, Category: {product.category.name}")
+    
+    name = input("Enter new name or Enter to keep current name: ")
     if name != '':
         product.name = name
 
-    quantity = input("Enter the new product quantity or Enter to keep the current quantity: ")
+    quantity = input("Enter new quantity or Enter to keep current quantity: ")
     if quantity != '':
-        is_gt_zero = False
-        while not is_gt_zero:
-            if int(quantity) < 0:
-                print("Quantity must be greater or equal zero")
-                quantity = input("Enter the new product quantity: ")
-            else:
-                is_gt_zero = True
-        product.quantity = int(quantity)
+        if int(quantity) < 0:
+            print("Quantity must be positive")
+        else:
+            product.quantity = int(quantity)
 
     price = input("Enter the new product price or Enter to keep the current price: ")
     if price != '':
@@ -182,6 +201,31 @@ def change_product(inventory:Inventory, product_id:str):
                 category = Category(category_name, vat)
                 inventory.add_category(category)            
         product.category = inventory.search_category_by_name(category_name)
+
+    # Add supplier changes
+    supplier_id = input("Enter the new supplier ID or Enter to keep the current supplier: ")
+    if supplier_id != '':
+        supplier = inventory.get_supplier_by_id(supplier_id)
+        if supplier is None:
+            print("Supplier does not exist")
+            create_new = input("Do you want to create a new supplier? [y/n]: ")
+            if create_new.lower() == 'y':
+                supplier = create_supplier(inventory)
+            else:
+                supplier_id = input("Enter an existing supplier ID: ")
+                supplier = inventory.get_supplier_by_id(supplier_id)
+                while supplier is None:
+                    print("Supplier not found")
+                    supplier_id = input("Enter an existing supplier ID: ")
+                    supplier = inventory.get_supplier_by_id(supplier_id)
+        
+        # Remove product from old supplier's catalog
+        if product.supplier:
+            product.supplier.remove_product(product_id)
+        
+        # Update product's supplier and add to new supplier's catalog
+        product.supplier = supplier
+        supplier.add_product(product)
 
 def remove_product(inventory:Inventory):
     """Remove a product from the inventory.

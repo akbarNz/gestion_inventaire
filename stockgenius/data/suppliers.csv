@@ -1,0 +1,4 @@
+supplier_id,name,contact_person,email,phone,address
+S001,TechWorld Inc,John Smith,john@techworld.com,123-456-7890,123 Tech Street NY
+S002,FurniturePro,Alice Johnson,alice@furniturepro.com,234-567-8901,456 Wood Avenue CA
+S003,FashionStyle,Bob Wilson,bob@fashionstyle.com,345-678-9012,789 Fashion Boulevard FL

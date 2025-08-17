@@ -1,3 +1,5 @@
+from stockgenius.product import Product
+
 class Order:
     """
     Represents an order containing multiple products.

@@ -1,2 +1,6 @@
 stockgenius/__pycache__
 stockgenius/managment/__pycache__
+.idea
+stockgenius/tests/__pycache__
+stockgenius/stockgenius.egg-info
+

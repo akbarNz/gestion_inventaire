@@ -1,4 +1,11 @@
-product_id,name,quantity,price,category_name,vat
-P007,T-Shirt,50,20.0,Clothing,0.15
-P008,Jeans,40,40.0,Clothing,0.15
-P009,Jacket,25,100.0,Clothing,0.15
+product_id,name,quantity,price,category_name,vat,supplier_id
+P021,T-Shirt,50,20.0,Clothing,0.15,S003
+P022,Jeans,40,40.0,Clothing,0.15,S003
+P023,Jacket,25,100.0,Clothing,0.15,S003
+P024,Dress,30,80.0,Clothing,0.15,S003
+P025,Sweater,35,60.0,Clothing,0.15,S003
+P026,Shorts,45,30.0,Clothing,0.15,S003
+P027,Skirt,20,45.0,Clothing,0.15,S003
+P028,Blazer,15,120.0,Clothing,0.15,S003
+P029,Polo Shirt,40,35.0,Clothing,0.15,S003
+P030,Hoodie,30,50.0,Clothing,0.15,S003

@@ -6,10 +6,11 @@ import argparse
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 
-from init_state import init_state
-from managment.category_management import category_management
-from managment.order_management import order_management
-from managment.product_management import product_management
+from stockgenius.init_state import init_state
+from stockgenius.managment.category_management import category_management
+from stockgenius.managment.order_management import order_management
+from stockgenius.managment.product_management import product_management
+from stockgenius.managment.supplier_management import supplier_management
 
 
 def main():
@@ -45,7 +46,10 @@ def main():
     done = False
     
     while not done:
-        message = f"{'-'*106}\nto manage product enter [p], to manage orders enter [o], to manage categories enter [c], to quit enter [q]\n{'-'*106}"
+        message = (f"{'-'*106}\n"
+                  f"to manage product enter [p], to manage orders enter [o], "
+                  f"to manage categories enter [c], to manage suppliers enter [s], "
+                  f"to quit enter [q]\n{'-'*106}")
         print(message)
         opt = choose_option()
 
@@ -58,25 +62,28 @@ def main():
         elif opt == 'c':
             print('Categories management')
             category_management(inventory)
+        elif opt == 's':
+            print('Suppliers management')
+            supplier_management(inventory)
         elif opt == 'q':
             done = True
             generate_report(inventory)
-            print('you quit successefuly')
+            print('you quit successfully')
 
 def choose_option():
     """Choose an option to manage.
     
-    Returns: opt (str) the choosen option
+    Returns: opt (str) the chosen option
     """
-    opt = input("enter an option [p/o/c/q]: ")
+    opt = input("enter an option [p/o/c/s/q]: ")
     valid = False
 
     while not valid:
-        if len(opt) == 1 and opt.lower() in 'pocq':
+        if len(opt) == 1 and opt.lower() in 'pocsq':
             valid = True
         else:
             print("option not valid")
-            opt = input("enter an option [p/o/c/q]: ")
+            opt = input("enter an option [p/o/c/s/q]: ")
     
     return opt   
 

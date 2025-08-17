@@ -1,11 +1,17 @@
+from stockgenius.category import Category
+from stockgenius.product import Product
+from stockgenius.order import Order
+from stockgenius.supplier import Supplier
+
 class Inventory:
     """
-    Manages the collection of products, categories, and orders.
+    Manages the collection of products, categories, orders, and suppliers.
 
     Attributes:
         products (list): A list of Product objects.
         categories (list): A list of Category objects.
         orders (list): A list of Order objects.
+        suppliers (list): A list of Supplier objects.
     """
 
     def __init__(self):
@@ -15,6 +21,7 @@ class Inventory:
         self.__products = []
         self.__categories = []
         self.__orders = []
+        self.__suppliers = []
 
     # GETTERS AND SETTERS
 
@@ -29,6 +36,10 @@ class Inventory:
     @property
     def orders(self):
         return self.__orders
+    
+    @property
+    def suppliers(self):
+        return self.__suppliers
     
     # BUILTINS REDEFINED
     def __str__(self):
@@ -275,3 +286,27 @@ class Inventory:
             i += 1
         
         return tmp
+
+    def add_supplier(self, supplier):
+        """Add a supplier to the inventory."""
+        if supplier not in self.__suppliers:
+            self.__suppliers.append(supplier)
+
+    def remove_supplier(self, supplier_id):
+        """Remove a supplier from the inventory."""
+        self.__suppliers = [s for s in self.__suppliers if s.supplier_id != supplier_id]
+
+    def get_supplier_by_id(self, supplier_id):
+        """Get a supplier by their ID."""
+        for supplier in self.__suppliers:
+            if supplier.supplier_id == supplier_id:
+                return supplier
+        return None
+
+    def get_suppliers_by_product(self, product_id):
+        """Get all suppliers that supply a specific product."""
+        return [s for s in self.__suppliers if any(p.product_id == product_id for p in s.products)]
+
+    def list_suppliers(self):
+        """List all suppliers in the inventory."""
+        return "\n".join(str(supplier) for supplier in self.__suppliers)

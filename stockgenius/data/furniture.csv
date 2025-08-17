@@ -1,4 +1,11 @@
-product_id,name,quantity,price,category_name,vat
-P004,Chair,30,50.0,Furniture,0.1
-P005,Table,10,150.0,Furniture,0.1
-P006,Sofa,5,500.0,Furniture,0.1
+product_id,name,quantity,price,category_name,vat,supplier_id
+P011,Chair,30,50.0,Furniture,0.1,S002
+P012,Table,10,150.0,Furniture,0.1,S002
+P013,Sofa,5,500.0,Furniture,0.1,S002
+P014,Bed Frame,8,300.0,Furniture,0.1,S002
+P015,Wardrobe,6,400.0,Furniture,0.1,S002
+P016,Dining Set,4,800.0,Furniture,0.1,S002
+P017,Office Desk,12,200.0,Furniture,0.1,S002
+P018,Bookshelf,15,150.0,Furniture,0.1,S002
+P019,Coffee Table,20,100.0,Furniture,0.1,S002
+P020,TV Stand,10,120.0,Furniture,0.1,S002

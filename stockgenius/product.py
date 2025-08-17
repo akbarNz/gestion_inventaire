@@ -1,3 +1,6 @@
+from stockgenius.category import Category
+from stockgenius.supplier import Supplier
+
 class Product:
     """
     Represents an item in the inventory.
@@ -8,9 +11,10 @@ class Product:
         quantity (int): The quantity of the product in stock.
         price (float): The price of the product.
         category (Category): The category to which the product belongs.
+        supplier (Supplier): The supplier of the product.
     """
 
-    def __init__(self, product_id, name, quantity, price, category):
+    def __init__(self, product_id, name, quantity, price, category, supplier=None):
         """
         Initializes a new Product instance.
 
@@ -20,12 +24,14 @@ class Product:
             quantity (int): The quantity of the product in stock.
             price (float): The price of the product.
             category (Category): The category to which the product belongs.
+            supplier (Supplier, optional): The supplier of the product. Defaults to None.
         """
         self.__product_id = product_id
         self.__name = name
         self.__quantity = quantity
         self.__price = price
         self.__category = category
+        self.__supplier = supplier
 
     # GETTER AND SETTER
     @property
@@ -64,6 +70,18 @@ class Product:
     @property
     def category(self):
         return self.__category
+
+    @category.setter
+    def category(self, new_category):
+        self.__category = new_category
+    
+    @property
+    def supplier(self):
+        return self.__supplier
+
+    @supplier.setter
+    def supplier(self, new_supplier):
+        self.__supplier = new_supplier
     
     def __str__(self):
         """
