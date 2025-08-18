@@ -8,6 +8,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from stockgenius.category import Category
 from stockgenius.inventory import Inventory
 from stockgenius.product import Product
+from stockgenius.sale_order import SaleOrder  # Changed from Order
 from stockgenius.supplier import Supplier
 
 

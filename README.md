@@ -6,7 +6,7 @@ A Python-based inventory management system that handles products, categories, or
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/gestion_inventaire.git
+git clone https://github.com/akbarNz/gestion_inventaire.git
 cd gestion_inventaire
 ```
 
@@ -65,31 +65,38 @@ gestion_inventaire/
 ├── README.md
 └── stockgenius/
     ├── __init__.py
+    ├── abstract_order.py      # New: Base class for orders
     ├── category.py
     ├── init_state.py
     ├── interface.py
-    ├── inventory.py
-    ├── order.py
-    ├── product.py
+    ├── inventory.py           # Modified: Added purchase order support
+    ├── order_manager.py       # New: Handles automated purchases
+    ├── product.py            # Modified: Added reorder points
+    ├── purchase_order.py     # New: Purchase order implementation
+    ├── sale_order.py         # New: Replaces order.py
     ├── supplier.py
     ├── data/
-    │   ├── clothing.csv
-    │   ├── electronics.csv
-    │   ├── furniture.csv
-    │   └── suppliers.csv
+    │   ├── clothing.csv      # Modified: Updated with supplier_id
+    │   ├── electronics.csv   # Modified: Updated with supplier_id
+    │   ├── furniture.csv     # Modified: Updated with supplier_id
+    │   └── suppliers.csv     # New: Supplier data
     ├── management/
     │   ├── __init__.py
     │   ├── category_management.py
-    │   ├── order_management.py
-    │   ├── product_management.py
-    │   └── supplier_management.py
+    │   ├── order_management.py    # Modified: Handles both order types
+    │   ├── product_management.py  # Modified: Added supplier support
+    │   └── supplier_management.py # New: Supplier management
     └── tests/
         ├── __init__.py
+        ├── test_abstract_order.py # New: Tests for base order class
         ├── test_category.py
-        ├── test_inventory.py
-        ├── test_order.py
-        ├── test_product.py
-        └── test_init_state.py
+        ├── test_inventory.py      # Modified: Added order tests
+        ├── test_order_manager.py  # New: Tests for order manager
+        ├── test_product.py        # Modified: Added supplier tests
+        ├── test_purchase_order.py # New: Tests for purchase orders
+        ├── test_sale_order.py     # New: Replaces test_order.py
+        ├── test_supplier.py       # New: Tests for supplier class
+        └── test_init_state.py     # Modified: Added supplier init
 ```
 
 ## Contributing

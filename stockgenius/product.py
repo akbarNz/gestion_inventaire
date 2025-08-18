@@ -32,6 +32,8 @@ class Product:
         self.__price = price
         self.__category = category
         self.__supplier = supplier
+        self.__reorder_point = 5  # Default reorder point
+        self.__optimal_stock = 20  # Default optimal stock level
 
     # GETTER AND SETTER
     @property
@@ -82,6 +84,24 @@ class Product:
     @supplier.setter
     def supplier(self, new_supplier):
         self.__supplier = new_supplier
+    
+    @property
+    def reorder_point(self):
+        return self.__reorder_point
+
+    @reorder_point.setter
+    def reorder_point(self, value):
+        if isinstance(value, int) and value >= 0:
+            self.__reorder_point = value
+
+    @property
+    def optimal_stock(self):
+        return self.__optimal_stock
+
+    @optimal_stock.setter
+    def optimal_stock(self, value):
+        if isinstance(value, int) and value >= self.reorder_point:
+            self.__optimal_stock = value
     
     def __str__(self):
         """

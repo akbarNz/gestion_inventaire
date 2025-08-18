@@ -1,6 +1,7 @@
 from stockgenius.category import Category
 from stockgenius.product import Product
-from stockgenius.order import Order
+from stockgenius.sale_order import SaleOrder  # Changed from Order
+from stockgenius.purchase_order import PurchaseOrder
 from stockgenius.supplier import Supplier
 
 class Inventory:
@@ -22,6 +23,8 @@ class Inventory:
         self.__categories = []
         self.__orders = []
         self.__suppliers = []
+        self.__sale_orders = []
+        self.__purchase_orders = []
 
     # GETTERS AND SETTERS
 
@@ -40,6 +43,14 @@ class Inventory:
     @property
     def suppliers(self):
         return self.__suppliers
+    
+    @property
+    def sale_orders(self):
+        return self.__sale_orders
+
+    @property
+    def purchase_orders(self):
+        return self.__purchase_orders
     
     # BUILTINS REDEFINED
     def __str__(self):
@@ -310,3 +321,13 @@ class Inventory:
     def list_suppliers(self):
         """List all suppliers in the inventory."""
         return "\n".join(str(supplier) for supplier in self.__suppliers)
+
+    def add_sale_order(self, order):
+        """Add a sale order to the inventory."""
+        if order not in self.__sale_orders:
+            self.__sale_orders.append(order)
+
+    def add_purchase_order(self, order):
+        """Add a purchase order to the inventory."""
+        if order not in self.__purchase_orders:
+            self.__purchase_orders.append(order)

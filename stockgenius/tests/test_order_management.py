@@ -18,7 +18,7 @@ from stockgenius.managment.order_management import (
     search_order,
     list_orders
 )
-from stockgenius.order import Order
+from stockgenius.sale_order import Order
 from stockgenius.product import Product
 
 

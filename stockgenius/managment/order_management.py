@@ -1,212 +1,211 @@
 import sys
 import os
-from copy import deepcopy
-
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-
+from datetime import datetime
 
 from stockgenius.inventory import Inventory
-from stockgenius.order import Order
+from stockgenius.sale_order import SaleOrder
+from stockgenius.purchase_order import PurchaseOrder
+from stockgenius.order_manager import OrderManager
+from stockgenius.abstract_order import OrderStatus
+from stockgenius.product import Product  # Add this import
 
-
-def order_management(inventory:Inventory):
-    """Manage orders in the inventory. create, remove, search, and list orders.
+def order_management(inventory: Inventory):
+    """Manage orders in the inventory."""
+    print("\nOrder Management")
+    print(f"Sale Orders: {len(inventory.sale_orders)}")
+    print(f"Purchase Orders: {len(inventory.purchase_orders)}")
     
-    Args:
-        inventory (Inventory): the inventory
-    """
-    # Print all orders
-    list_orders(inventory)
-
     done = False
+    order_manager = OrderManager(inventory)
+    
     while not done:
-        message = f"{'-'*106}\nTo create an order enter [c], to change an order enter [u], to remove an order enter [r], to search an order enter [s], to list all orders enter [l], to quit order management enter [q]\n{'-'*106}"
-        print(message)
-        opt = choose_option()
-
-        if opt == 'c':
-            print("Create an order")
-            create_order(inventory)
-        elif opt == 'u':
-            print('Change an order')
-            order_id = input("Enter the order ID to update: ")
-            if inventory.get_order_by_id(order_id) is None:
-                print("Order not found")
-            else:
-                change_order(inventory, order_id)
-        elif opt == 'r':
-            print('Remove an order')
-            remove_order(inventory)
-        elif opt == 's':
-            print('Search an order')
-            search_order(inventory)
-        elif opt == 'l':
-            print('List all orders')
-            list_orders(inventory)
-        elif opt == 'q':
+        option = choose_option()
+        if option == 'c':
+            create_sale_order(inventory)
+        elif option == 'v':
+            view_orders(inventory)
+        elif option == 'u':
+            update_order_status(inventory)
+        elif option == 'p':
+            view_purchase_orders(inventory)
+        elif option == 'a':
+            order_manager.check_stock_levels()
+            print("Automated purchase orders check completed")
+        elif option == 'q':
+            print('you quit successfully')
             done = True
-            print('you quit successefuly')
 
 def choose_option():
-    """Choose an option to manage.
+    """Choose an option for order management."""
+    print("\nOrder Management Options:")
+    print("c: Create new sale order")
+    print("v: View all orders")
+    print("u: Update order status")
+    print("p: View purchase orders")
+    print("a: Run automated purchase check")
+    print("q: Quit")
     
-    Returns: opt (str) the choosen option
-    """
-    opt = input("enter an option [c/u/r/s/l/q]: ")
+    opt = input("enter an option [c/v/u/p/a/q]: ")
     valid = False
 
     while not valid:
-        if len(opt) == 1 and opt.lower() in 'curslq':
+        if len(opt) == 1 and opt.lower() in 'cvupaq':
             valid = True
         else:
             print("option not valid")
-            opt = input("enter an option [c/u/r/s/l/q]: ")
+            opt = input("enter an option [c/v/u/p/a/q]: ")
     
     return opt
 
-def create_order(inventory:Inventory):
-    """Create an order.
-    
-    Args:
-        inventory (Inventory): the inventory
-    """
-    order_id = input("Enter the order ID eg O003 : ")
-    is_correct = False
-    change_existing_order = 'n'
-    while not is_correct:
-        if inventory.get_order_by_id(order_id) is not None:
-            print("Order ID already exists")
-            change_existing_order = input("Do you want to change the existing order? [y/n]: ")
-            if change_existing_order == 'y':
-                is_correct = True
-            else:
-                order_id = input("Enter the order ID eg O003 : ")
-        else: 
-            # create the order and add it to the inventory orders eg Order('O001', products=[])
-            products = add_products_to_order(inventory)
-            order = Order(order_id, products)
-            inventory.add_new_order(order)
-            is_correct = True
-
-    if change_existing_order == 'y':
-        change_order(inventory, order_id)
-
-
-def add_products_to_order(inventory:Inventory):
-    """Add products to an order.
-    
-    Args:
-        inventory (Inventory): the inventory
-    
-    Returns:
-        products (list): the products to add to the order
-    """
+def create_sale_order(inventory: Inventory):
+    """Create a new sale order with category-based product selection."""
+    order_id = f"SO{datetime.now().strftime('%Y%m%d%H%M%S')}"
     products = []
-    done = False
-    # print all products
-    print(inventory.list_products())
-    while not done:
-        product_id = input("Enter the product ID eg P003 : ")
-        product = inventory.get_product_by_id(product_id)
-        if product is not None:
-            products.append(deepcopy(product))
-            add_more_products = input("Do you want to add more products? [y/n]: ")
-            if add_more_products == 'n':
-                done = True
+    
+    while True:
+        # Display categories
+        print("\nAvailable Categories:")
+        print("-" * 50)
+        for category in inventory.categories:
+            print(f"- {category.name}")
+        print("-" * 50)
+        print("Enter 'back' to return to previous menu")
+        print("Enter 'done' to finalize order")
+        
+        category_name = input("\nSelect a category: ")
+        
+        if category_name.lower() == 'done':
+            break
+        elif category_name.lower() == 'back':
+            if len(products) > 0:
+                if not confirm_order():
+                    return
+            break
+            
+        # Display products in selected category
+        category_products = [p for p in inventory.products if p.category.name == category_name]
+        if category_products:
+            while True:
+                print(f"\nProducts in {category_name}:")
+                print("-" * 80)
+                print(f"{'ID':<10} | {'Name':<20} | {'Quantity':<10} | {'Price':<10}")
+                print("-" * 80)
+                for product in category_products:
+                    print(f"{product.product_id:<10} | {product.name:<20} | {product.quantity:<10} | {product.price:<10.2f}")
+                print("-" * 80)
+                print("Enter 'back' to return to categories")
+                
+                product_id = input("\nEnter product ID: ")
+                if product_id.lower() == 'back':
+                    break
+                    
+                selected_product = inventory.get_product_by_id(product_id)
+                if selected_product and selected_product in category_products:
+                    try:
+                        quantity = int(input(f"Enter quantity (available: {selected_product.quantity}): "))
+                        if 0 < quantity <= selected_product.quantity:
+                            # Create a copy of the product with the requested quantity
+                            order_product = Product(
+                                selected_product.product_id,
+                                selected_product.name,
+                                quantity,
+                                selected_product.price,
+                                selected_product.category,
+                                selected_product.supplier
+                            )
+                            products.append(order_product)
+                            print(f"\nAdded {quantity} x {selected_product.name} to order")
+                        else:
+                            print("\nInvalid quantity!")
+                    except ValueError:
+                        print("\nInvalid quantity format!")
+                else:
+                    print("\nProduct not found!")
         else:
-            print("Product not found")
-    return products
-
-def change_order(inventory:Inventory, order_id:str):
-    """Change an order.
+            print(f"\nNo products found in category {category_name}")
     
-    Args:
-        inventory (Inventory): the inventory
-        order_id (str): the order ID
-    """
-    opt = input("Do you want to add or remove products to/from the order? Enter q to quit [a/r/q]: ")
-    is_correct = False
-    while not is_correct:
-        if len(opt) == 1 and opt.lower() in 'arq':
-            is_correct = True
+    if products and confirm_order():
+        order = SaleOrder(order_id, products)
+        inventory.add_sale_order(order)
+        print(f"\nSale order {order_id} created successfully")
+        print(f"Total price: {order.total_price:.2f}")
+
+def confirm_order():
+    """Ask for order confirmation."""
+    while True:
+        confirm = input("\nDo you want to confirm this order? (YES/NO): ").upper()
+        if confirm == 'YES':
+            return True
+        elif confirm == 'NO':
+            print("\nOrder cancelled")
+            return False
         else:
-            print("option not valid")
-            opt = input("Do you want to add or remove products to/from the order? Enter q to quit [a/r/q]: ")
-    
-    if opt == 'a':
-        # add products to the order
-        order = inventory.get_order_by_id(order_id)
-        products = add_products_to_order(inventory)
-        order.products.extend(products)
-        order.total_price = order.calculate_total_price()
-    elif opt == 'r':
-        # remove products from the order
-        order = inventory.get_order_by_id(order_id)
-        is_done = False
-        while not is_done:
-            product_id = input("Enter the product ID eg P003 : ")
-            product = order.seach_product_by_id(product_id)
-            if product is None:
-                print("Product not found")
-            else:
-                order.remove_product(product)
-                order.total_price = order.calculate_total_price()
-            remove_more_products = input("Do you want to remove more products? [y/n]: ")
-            if remove_more_products == 'n':
-                is_done = True
-    elif opt == 'q':
-        # quit
-        pass
+            print("\nPlease enter YES or NO")
 
-def remove_order(inventory:Inventory):
-    """Remove an order.
+def view_orders(inventory: Inventory):
+    """View all orders."""
+    print("\nSale Orders:")
+    for order in inventory.sale_orders:
+        print(order)
+        print(order.list_products())
     
-    Args:
-        inventory (Inventory): the inventory
-    """
-    order_id = input("Enter the order ID eg O003 : ")
-    order = inventory.get_order_by_id(order_id)
-    if order is not None:
-        inventory.remove_order(order_id)
-    else:
-        print("Order not found")
+    print("\nPurchase Orders:")
+    for order in inventory.purchase_orders:
+        print(order)
+        print(f"Supplier: {order.supplier.name}")
+        print(order.list_products())
 
-def search_order(inventory:Inventory):
-    """Search an order.
+def update_order_status(inventory: Inventory):
+    """Update order status and handle quantity updates."""
+    order_id = input("Enter order ID: ")
+    new_status = input("Enter new status (pending/confirmed/shipped/delivered/cancelled): ")
     
-    Args:
-        inventory (Inventory): the inventory
-    """
-    order_id = input("Enter the order ID eg O003 : ")
-    order = inventory.get_order_by_id(order_id)
-    if order is not None:
-        opt = input("Do you want to list or change the order? Enter q to quit [l/c/q]: ")
-        is_correct = False
-        while not is_correct:
-            if len(opt) == 1 and opt.lower() in 'lcq':
-                is_correct = True
-            else:
-                print("option not valid")
-                opt = input("Do you want to list or change the order? Enter q to quit [l/c/q]: ")
-        if opt == 'l':
-            # list products in the order
-            print(order.list_products())
-        elif opt == 'c':
-            change_order(inventory, order_id)
-        elif opt == 'q':
-            # quit
-            pass
-    else:
-        print("Order not found")
+    try:
+        status = OrderStatus(new_status)
+        orders_updated = False
+        
+        # Update all orders with the same ID
+        for order in inventory.purchase_orders:
+            if order.order_id == order_id:
+                old_status = order.status
+                order.status = status
+                orders_updated = True
+                
+                # Update product quantities if status changed to delivered
+                if status == OrderStatus.DELIVERED and old_status != OrderStatus.DELIVERED:
+                    for product in order.products:
+                        original_product = inventory.get_product_by_id(product.product_id)
+                        if original_product:
+                            original_product.quantity += product.quantity
+                    print(f"Updated quantities for order {order_id}")
 
-def list_orders(inventory:Inventory):
-    """List all orders.
-    
-    Args:
-        inventory (Inventory): the inventory
-    """
-    res = "Orders in the inventory:\n"
-    res = "-"*80 + '\n' + res + "-"*80 + "\n"
-    for order in inventory.orders:
-        res += str(order)
-    print(res)
+        for order in inventory.sale_orders:
+            if order.order_id == order_id:
+                old_status = order.status
+                order.status = status
+                orders_updated = True
+                
+                # Decrease product quantities if status changed to delivered
+                if status == OrderStatus.DELIVERED and old_status != OrderStatus.DELIVERED:
+                    for product in order.products:
+                        original_product = inventory.get_product_by_id(product.product_id)
+                        if original_product:
+                            original_product.quantity -= product.quantity
+                    print(f"Updated quantities for order {order_id}")
+        
+        if orders_updated:
+            print(f"Updated order {order_id} status to {new_status}")
+        else:
+            print(f"Order {order_id} not found")
+            
+    except ValueError:
+        print("Invalid status")
+
+def view_purchase_orders(inventory: Inventory):
+    """View purchase orders."""
+    print("\nPurchase Orders:")
+    for order in inventory.purchase_orders:
+        print(order)
+        print(f"Supplier: {order.supplier.name}")
+        print(f"Expected Delivery: {order.expected_delivery.strftime('%Y-%m-%d')}")
+        print(order.list_products())

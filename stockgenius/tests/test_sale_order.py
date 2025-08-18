@@ -4,9 +4,9 @@ import sys
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from stockgenius.category import Category
-from stockgenius.order import Order
+from stockgenius.sale_order import SaleOrder  # Changed from Order
 from stockgenius.product import Product
+from stockgenius.category import Category
 
 
 class TestOrder(unittest.TestCase):
@@ -14,7 +14,7 @@ class TestOrder(unittest.TestCase):
         self.category = Category("Electronics", 0.2)
         self.product1 = Product("P001", "Laptop", 10, 1500.0, self.category)
         self.product2 = Product("P002", "Smartphone", 20, 800.0, self.category)
-        self.order = Order("O001", [self.product1])
+        self.order = SaleOrder("O001", [self.product1])
 
     def test_calculate_total_price(self):
         self.assertEqual(self.order.calculate_total_price(), 1500.0)
