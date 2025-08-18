@@ -11,6 +11,7 @@ from stockgenius.managment.category_management import category_management
 from stockgenius.managment.order_management import order_management
 from stockgenius.managment.product_management import product_management
 from stockgenius.managment.supplier_management import supplier_management
+from stockgenius.analytics import SalesAnalytics
 
 
 def main():
@@ -49,7 +50,7 @@ def main():
         message = (f"{'-'*106}\n"
                   f"to manage product enter [p], to manage orders enter [o], "
                   f"to manage categories enter [c], to manage suppliers enter [s], "
-                  f"to quit enter [q]\n{'-'*106}")
+                  f"to view dashboard enter [d], to quit enter [q]\n{'-'*106}")  # Added dashboard option
         print(message)
         opt = choose_option()
 
@@ -65,30 +66,33 @@ def main():
         elif opt == 's':
             print('Suppliers management')
             supplier_management(inventory)
+        elif opt == 'd':
+            print('Sales Analytics Dashboard')
+            analytics = SalesAnalytics(inventory)
+            print(analytics.generate_dashboard())
+            input("\nPress Enter to continue...")  # Pause to read dashboard
         elif opt == 'q':
             done = True
             generate_report(inventory)
             print('you quit successfully')
 
 def choose_option():
-    """Choose an option to manage.
-    
-    Returns: opt (str) the chosen option
-    """
-    opt = input("enter an option [p/o/c/s/q]: ")
+    """Choose an option to manage."""
+    opt = input("enter an option [p/o/c/s/d/q]: ")  # Added 'd' option
     valid = False
 
     while not valid:
-        if len(opt) == 1 and opt.lower() in 'pocsq':
+        if len(opt) == 1 and opt.lower() in 'pocsdq':  # Added 'd' to valid options
             valid = True
         else:
             print("option not valid")
-            opt = input("enter an option [p/o/c/s/q]: ")
+            opt = input("enter an option [p/o/c/s/d/q]: ")  # Added 'd' option
     
     return opt   
 
 
 def generate_report(inventory):
+    """Generate final reports."""
     report = {
         'number_of_products': len(inventory.products),
         'number_of_orders': len(inventory.orders),
@@ -104,6 +108,20 @@ def generate_report(inventory):
             f.write(f"{key}: {value}\n")
 
     print(f"Report generated and saved to {report_file}")
+    
+    # Generate and save analytics dashboard
+    analytics = SalesAnalytics(inventory)
+    dashboard = analytics.generate_dashboard()
+    
+    # Create output directory if it doesn't exist
+    os.makedirs('output', exist_ok=True)
+    
+    # Save dashboard to file
+    dashboard_file = os.path.join('output', 'sales_dashboard.txt')
+    with open(dashboard_file, 'w') as f:
+        f.write(dashboard)
+    
+    print(f"\nSales dashboard has been generated at: {dashboard_file}")
     
 if __name__ == '__main__':
     main()
