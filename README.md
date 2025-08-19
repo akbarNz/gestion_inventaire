@@ -57,6 +57,65 @@ python3 -m unittest stockgenius/tests/test_inventory.py -v
 python3 -m unittest stockgenius/tests/test_init_state.py -v
 ```
 
+## Running the GUI
+
+1. Install system dependencies for Kivy:
+```bash
+# Update package list
+sudo apt-get update
+
+# Install required system packages
+sudo apt-get install -y \
+    python3-pip \
+    python3-dev \
+    libgl1-mesa-dev \
+    libmtdev1 \
+    ffmpeg \
+    libsdl2-dev \
+    libsdl2-image-dev \
+    libsdl2-mixer-dev \
+    libsdl2-ttf-dev \
+    libportmidi-dev \
+    libswscale-dev \
+    libavformat-dev \
+    libavcodec-dev \
+    zlib1g-dev \
+    xclip \
+    xsel
+```
+
+2. Install Kivy:
+```bash
+# Upgrade pip and install Kivy
+pip3 install --upgrade pip setuptools wheel
+pip3 install kivy[base]
+```
+
+3. If using WSL, setup X server:
+   - Install VcXsrv on Windows
+   - Configure display:
+```bash
+# Add to ~/.bashrc
+echo "export DISPLAY=:0" >> ~/.bashrc
+source ~/.bashrc
+```
+
+4. Run the GUI:
+```bash
+# From project root
+python3 stockgenius/gui/main.py
+```
+
+The GUI provides:
+- Dashboard with real-time analytics
+- Product management interface
+- Order processing (Sales and Purchases)
+- Supplier management
+- Automated purchase order generation
+- Order status tracking
+
+Note: For WSL users, ensure VcXsrv is running before starting the GUI.
+
 ## Project Structure
 
 ```
