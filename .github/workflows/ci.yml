@@ -1,0 +1,40 @@
+name: Python CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Récupération du code
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 2. Setup Python
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'  # adapte selon ton projet
+
+      # 3. Installer les dépendances
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt || true
+
+      # 4. Vérification du code
+      - name: Lint with ruff
+        run: ruff check .
+
+      - name: Format check with black
+        run: black --check .
+
+      # 5. Tests unitaires
+      - name: Run tests
+        run: pytest --cov=mon_package --cov-report=term-missing
